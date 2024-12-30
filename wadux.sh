@@ -1,7 +1,7 @@
 #!/bin/bash
 
 Ip_Vps=$(curl -sS ipv4.icanhazip.com)
-}
+
 function domain(){
 fun_bar() {
     CMD[0]="$1"
