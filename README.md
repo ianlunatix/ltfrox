@@ -4,5 +4,5 @@ apt update -y && apt install -y bzip2 gzip wget init coreutils openssl git scree
 ```
 ### UPDATE SCRIPT
 ```
-wget -q https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/update.sh && chmod +x update.sh && ./update.sh
+wget -q https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/update && chmod +x update && ./update
 ```
