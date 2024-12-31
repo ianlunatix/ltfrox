@@ -1,0 +1,54 @@
+#!/bin/bash
+# Mendapatkan waktu dari server melalui Google
+dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+biji=$(date +"%Y-%m-%d" -d "$dateFromServer")
+
+###########- COLOR CODE -##############
+echo -e " [INFO] Downloading Files..."
+
+# Daftar URL dan path file yang akan diunduh
+declare -A files=(
+    [menu]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/menu"
+    [m-ip]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-ip"
+    [m-bot]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-bot"
+    [update]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/update"
+    [m-theme]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-theme"
+    [m-vmess]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-vmess"
+    [m-vless]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-vless"
+    [m-trojan]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-trojan"
+    [m-system]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-system"
+    [m-sshovpn]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-sshovpn"
+    [m-ssws]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-ssws"
+    [running]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/running"
+    [m-backup]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-backup"
+    [m-update]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-update"
+    [speedtest]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/speedtest_cli.py"
+    [bckpbot]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/bckpbot"
+    [tendang]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/tendang"
+    [bottelegram]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/bottelegram"
+    [m-allxray]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/m-allxray"
+    [xraylimit]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/xraylimit"
+    [trialvmess]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/trialvmess"
+    [trialvless]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/trialtrojan"
+    [trialtrojan]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/trialvless"
+    [trialssh]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/trialssh"
+    [autocpu]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/install/autocpu"
+    [bantwidth]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/install/bantwidth"
+    [pointing]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/pointing"
+    [nameserver]="https://raw.githubusercontent.com/ianlunatix/ltfrox/main/menu/nameserver"
+)
+
+# Mengunduh file satu per satu
+for file in "${!files[@]}"; do
+    echo -e " [INFO] Downloading ${file}..."
+    wget -q -O "/usr/bin/${file}" "${files[$file]}" && chmod +x "/usr/bin/${file}"
+    if [ $? -eq 0 ]; then
+        echo -e " [SUCCESS] ${file} downloaded and set as executable."
+    else
+        echo -e " [ERROR] Failed to download ${file}."
+    fi
+done
+
+echo -e " [INFO] All files have been downloaded successfully."
+sleep 2
+exit 0
