@@ -8,7 +8,7 @@ NC='\033[0m'
 # Instalasi python3 dan pip
 apt install python3 -y
 apt install python3-pip -y
-pip install requests
+pip install requests -y
 
 # Fungsi untuk menambahkan domain
 function ADDON_DOMAINS() {
@@ -138,20 +138,6 @@ cat <<EOF>> /etc/ianlunatix/theme/color.conf
 lightcyan
 EOF
 
-function Casper2(){
-cd
-sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1
-clear
-wget https://raw.githubusercontent.com/ianlunatix/ltfrox/main/tools.sh &> /dev/null
-chmod +x tools.sh 
-bash tools.sh
-clear
-start=$(date +%s)
-ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-apt install git curl -y >/dev/null 2>&1
-apt install python -y >/dev/null 2>&1
-}
 function Casper3(){
 fun_bar() {
     CMD[0]="$1"
@@ -180,6 +166,20 @@ fun_bar() {
     tput cnorm
 }
 
+res1() {
+cd
+sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1
+clear
+wget https://raw.githubusercontent.com/ianlunatix/ltfrox/main/tools.sh &> /dev/null
+chmod +x tools.sh 
+bash tools.sh
+clear
+start=$(date +%s)
+ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+apt install git curl -y >/dev/null 2>&1
+apt install python -y >/dev/null 2>&1
+}
 
 res2() {
 wget https://raw.githubusercontent.com/ianlunatix/ltfrox/main/install/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
@@ -220,6 +220,10 @@ res9() {
 wget https://raw.githubusercontent.com/ianlunatix/ltfrox/main/install/udp-custom.sh && chmod +x udp-custom.sh && bash udp-custom.sh
 clear
 }
+echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
+echo -e "${tyblue}│      PROCESS INSTALLED DEPENDENCIES       │${NC}"
+echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
+fun_bar 'res1'
 
 echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
 echo -e "${tyblue}│      PROCESS INSTALLED SSH & OPENVPN     │${NC}"
@@ -265,8 +269,8 @@ fun_bar 'res9'
 function iinfo(){
 domain=$(cat /etc/xray/domain)
 TIMES="10"
-CHATID="6986825986"
-KEY="7061907321:AAHATcUbggwvfcxDzyb8YGdDXJzaYyXj8v8"
+CHATID="iwjwhwj"
+KEY="oiwjiwiwoo"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /etc/xray/isp)
 CITY=$(cat /etc/xray/city)
