@@ -1,8 +1,7 @@
 #!/bin/bash
-
 Ip_Vps=$(curl -sS ipv4.icanhazip.com)
 
-mkdir -p /etc/xray /etc/v2ray
+mkdir -p /etc/xray /etc/v2ray /var/lib /etc/ianlunatix/ /etc/ian/lunatic/theme
 function domain(){
 fun_bar() {
     CMD[0]="$1"
@@ -322,6 +321,7 @@ EOF
 cat <<EOF>> /etc/ianlunatix/theme/color.conf
 lightcyan
 EOF
+
 function Casper2(){
 cd
 sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
