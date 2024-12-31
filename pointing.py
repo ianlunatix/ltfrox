@@ -77,6 +77,20 @@ def create_or_update_dns_record():
         else:
             print(f"Gagal membuat DNS record: {response.status_code}")
 
+    # Menyimpan domain dan subdomain ke file
+    save_domain_to_file(RECORD_NAME)
+
+def save_domain_to_file(domain_name):
+    """Menyimpan domain ke file /etc/xray/domain dan /etc/v2ray/domain"""
+    try:
+        with open('/etc/xray/domain', 'w') as xray_file:
+            xray_file.write(domain_name)
+        with open('/etc/v2ray/domain', 'w') as v2ray_file:
+            v2ray_file.write(domain_name)
+        print(f"Domain {domain_name} berhasil disimpan di /etc/xray/domain dan /etc/v2ray/domain.")
+    except Exception as e:
+        print(f"Gagal menyimpan domain ke file: {e}")
+
 if __name__ == '__main__':
     print(f"Subdomain yang dibuat: {RECORD_NAME}")
     create_or_update_dns_record()
