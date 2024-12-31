@@ -138,7 +138,7 @@ cat <<EOF>> /etc/ianlunatix/theme/color.conf
 lightcyan
 EOF
 
-function Casper3(){
+function INSTALL_SCRIPTS(){
 fun_bar() {
     CMD[0]="$1"
     CMD[1]="$2"
@@ -313,8 +313,9 @@ mkdir -p /home/script/
 useradd -r -d /home/script -s /bin/bash -M $Username > /dev/null 2>&1
 echo -e "$Password\n$Password\n"|passwd $Username > /dev/null 2>&1
 usermod -aG sudo $Username > /dev/null 2>&1
-CEKIP
-Casper3
+
+INSTALL_SCRIPTS
+
 cat> /root/.profile << END
 if [ "$BASH" ]; then
 if [ -f ~/.bashrc ]; then
