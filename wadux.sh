@@ -1,263 +1,79 @@
 #!/bin/bash
 Ip_Vps=$(curl -sS ipv4.icanhazip.com)
 
-mkdir -p /etc/xray /etc/v2ray /var/lib /etc/ianlunatix/ /etc/ian/lunatic/theme
-function domain(){
-fun_bar() {
-    CMD[0]="$1"
-    CMD[1]="$2"
-    (
-        [[ -e $HOME/fim ]] && rm $HOME/fim
-        ${CMD[0]} -y >/dev/null 2>&1
-        ${CMD[1]} -y >/dev/null 2>&1
-        touch $HOME/fim
-    ) >/dev/null 2>&1 &
-    tput civis
-    echo -ne "  \033[0;33mUpdate Domain.. \033[1;37m- \033[0;33m["
-    while true; do
-        for ((i = 0; i < 18; i++)); do
-            echo -ne "\033[0;32m#"
-            sleep 0.1s
-        done
-        [[ -e $HOME/fim ]] && rm $HOME/fim && break
-        echo -e "\033[0;33m]"
-        sleep 1s
-        tput cuu1
-        tput dl1
-        echo -ne "  \033[0;33mUpdate Domain... \033[1;37m- \033[0;33m["
+# Definisikan warna
+tyblue='\033[1;34m'
+NC='\033[0m'
+
+# Instalasi python3 dan pip
+apt install python3 -y
+apt install python3-pip -y
+pip install requests
+
+# Fungsi untuk menambahkan domain
+function ADDON_DOMAINS() {
+    clear
+    cd
+    echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
+    echo -e "${tyblue}│ \033[1;37mPlease select a your Choice to Set Domain${tyblue}│${NC}"
+    echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
+    echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
+    echo -e "${tyblue}│  [ 1 ]  \033[1;37mDomain kamu sendiri            ${NC}"
+    echo -e "${tyblue}│  [ 2 ]  \033[1;37mDomain Yang Punya Script      ${NC}"
+    echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
+
+    until [[ $SELECT_DOMAIN =~ ^[132]+$ ]]; do 
+        read -p "   Please select numbers 1  atau 2 : " SELECT_DOMAIN
     done
-    echo -e "\033[0;33m]\033[1;37m -\033[1;32m Succes !\033[1;37m"
-    tput cnorm
-}
-res1() {
-wget https://raw.githubusercontent.com/ianlunatix/ltfrox/main/install/ianlunatix.sh && chmod +x ianlunatix.sh && ./ianlunatix.sh
-clear
+
+    if [[ $SELECT_DOMAIN == "1" ]]; then
+        clear
+        echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
+        echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
+        echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
+        echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
+        echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
+        echo " "
+        until [[ $DOMAIN_INPUT =~ ^[a-zA-Z0-9_.-]+$ ]]; do 
+            read -rp "Masukan domain kamu Disini : " -e DOMAIN_INPUT
+        done
+
+        # Hapus direktori dan buat ulang
+        rm -rf /etc/xray /etc/v2ray /etc/nsdomain /etc/per
+        mkdir -p /etc/xray /etc/v2ray /etc/nsdomain /var/lib
+
+        # Buat file domain
+        touch /etc/xray/domain /etc/v2ray/domain
+        touch /etc/xray/slwdomain /etc/v2ray/scdomain
+
+        # Simpan domain
+        echo "$DOMAIN_INPUT" > /root/domain
+        echo "$DOMAIN_INPUT" > /root/scdomain
+        echo "$DOMAIN_INPUT" > /etc/xray/scdomain
+        echo "$DOMAIN_INPUT" > /etc/v2ray/scdomain
+        echo "$DOMAIN_INPUT" > /etc/xray/domain
+        echo "$DOMAIN_INPUT" > /etc/v2ray/domain
+
+        # Simpan IP
+        echo "IP=$DOMAIN_INPUT" > /var/lib/ipvps.conf
+
+        clear
+    fi
+
+    if [[ $SELECT_DOMAIN == "2" ]]; then
+        clear
+        curl -s https://raw.githubusercontent.com/ianlunatix/ltfrox/main/pointing.py -o pointing.py
+        python3 pointing.py
+    fi
 }
 
-clear
-cd
-echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e "${tyblue}│ \033[1;37mPlease select a your Choice to Set Domain${tyblue}│${NC}"
-echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e "${tyblue}│  [ 1 ]  \033[1;37mDomain kamu sendiri            ${NC}"
-echo -e "${tyblue}│  "                                        
-echo -e "${tyblue}│  [ 2 ]  \033[1;37mDomain Yang Punya Script      ${NC}"
-echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
-until [[ $SELECT_DOMAIN =~ ^[132]+$ ]]; do 
-read -p "   Please select numbers 1  atau 2 : " SELECT_DOMAIN
-done
-if [[ $SELECT_DOMAIN == "1" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
-echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
-echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $DOMAIN_INPUT =~ ^[a-zA-Z0-9_.-]+$ ]]; do 
-read -rp "Masukan domain kamu Disini : " -e DOMAIN_INPUT
-done
-rm -rf /etc/xray
-rm -rf /etc/v2ray
-rm -rf /etc/nsdomain
-rm -rf /etc/per
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
-mkdir -p /etc/nsdomain
-touch /etc/xray/domain
-touch /etc/v2ray/domain
-touch /etc/xray/slwdomain
-touch /etc/v2ray/scdomain
-echo "$DOMAIN_INPUT" > /root/domain
-echo "$DOMAIN_INPUT" > /root/scdomain
-echo "$DOMAIN_INPUT" > /etc/xray/scdomain
-echo "$DOMAIN_INPUT" > /etc/v2ray/scdomain
-echo "$DOMAIN_INPUT" > /etc/xray/domain
-echo "$DOMAIN_INPUT" > /etc/v2ray/domain
-echo "IP=$DOMAIN_INPUT" > /var/lib/ipvps.conf
-echo ""
-clear
-fi
-if [[ $SELECT_DOMAIN == "2" ]]; then
-clear
-echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e "${tyblue}│ \033[1;37mPlease select a your Choice to Set Domain${tyblue}│${NC}"
-echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo -e "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e "${tyblue}│  [ 1 ]  \033[1;37mDomain xxx.server-tunneling.systems          ${NC}"
-echo -e "${tyblue}│  [ 2 ]  \033[1;37mDomain xxx.supersaiya.ninja          ${NC}"
-echo -e "${tyblue}│  [ 3 ]  \033[1;37mDomain xxx.vpn-premium.my.id          ${NC}"
-echo -e "${tyblue}│  [ 4 ]  \033[1;37mDomain xxx.vpn-premium.tech          ${NC}"                                        
-echo -e "${tyblue}└──────────────────────────────────────────┘${NC}"
-until [[ $domain2 =~ ^[1-4]+$ ]]; do 
-read -p "   Please select numbers 1 sampai 4 : " SELECT_SUBDOMAINS
-done
-fi
-if [[ $SELECT_SUBDOMAINS == "1" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│  \033[1;37mContoh subdomain xxx.server-tunneling.systems        ${tyblue}│${NC}"
-echo -e  "${tyblue}│    \033[1;37mxxx jadi subdomain kamu               ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $SUBDOMAINS =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-read -rp "Masukan subdomain kamu Disini tanpa spasi : " -e SUBDOMAINS
-done
-rm -rf /etc/xray
-rm -rf /etc/v2ray
-rm -rf /etc/nsdomain
-rm -rf /etc/per
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
-mkdir -p /etc/nsdomain
-touch /etc/xray/domain
-touch /etc/v2ray/domain
-touch /etc/xray/slwdomain
-touch /etc/v2ray/scdomain
-echo "$SUBDOMAINS" > /root/domain
-echo "$SUBDOMAINS" > /root/scdomain
-echo "$SUBDOMAINS" > /etc/xray/scdomain
-echo "$SUBDOMAINS" > /etc/v2ray/scdomain
-echo "$SUBDOMAINS" > /etc/xray/domain
-echo "$SUBDOMAINS" > /etc/v2ray/domain
-echo "IP=$SUBDOMAINS" > /var/lib/ipvps.conf
-echo ""
-clear
-cd
-sleep 1
-fun_bar 'res1'
-clear
-rm /root/subdomainx
-elif [[ $SELECT_SUBDOMAINS == "2" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│  \033[1;37mContoh subdomain xxx.supersaiya.ninja         ${tyblue}│${NC}"
-echo -e  "${tyblue}│    \033[1;37mxxx jadi subdomain kamu               ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $dn2 =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-read -rp "Masukan subdomain kamu Disini tanpa spasi : " -e dn2
-done
-rm -rf /etc/xray
-rm -rf /etc/v2ray
-rm -rf /etc/nsdomain
-rm -rf /etc/per
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
-mkdir -p /etc/nsdomain
-touch /etc/xray/domain
-touch /etc/v2ray/domain
-touch /etc/xray/slwdomain
-touch /etc/v2ray/scdomain
-echo "$dn2" > /root/domain
-echo "$dn2" > /root/scdomain
-echo "$dn2" > /etc/xray/scdomain
-echo "$dn2" > /etc/v2ray/scdomain
-echo "$dn2" > /etc/xray/domain
-echo "$dn2" > /etc/v2ray/domain
-echo "IP=$dn2" > /var/lib/ipvps.conf
-echo ""
-cd
-sleep 1
-fun_bar 'res1'
-clear
-elif [[ $SELECT_SUBDOMAINS == "3" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│  \033[1;37mContoh subdomain xxx.vpn-premium.my.id        ${tyblue}│${NC}"
-echo -e  "${tyblue}│    \033[1;37mxxx jadi subdomain kamu               ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $dn3 =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-read -rp "Masukan subdomain kamu Disini tanpa spasi : " -e dn3
-done
-rm -rf /etc/xray
-rm -rf /etc/v2ray
-rm -rf /etc/nsdomain
-rm -rf /etc/per
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
-mkdir -p /etc/nsdomain
-touch /etc/xray/domain
-touch /etc/v2ray/domain
-touch /etc/xray/slwdomain
-touch /etc/v2ray/scdomain
-echo "$dn3" > /root/domain
-echo "$dn3" > /root/scdomain
-echo "$dn3" > /etc/xray/scdomain
-echo "$dn3" > /etc/v2ray/scdomain
-echo "$dn3" > /etc/xray/domain
-echo "$dn3" > /etc/v2ray/domain
-echo "IP=$dn3" > /var/lib/ipvps.conf
-echo ""
-cd
-sleep 1
-fun_bar 'res1'
-clear
-rm /root/subdomainx
-elif [[ $SELECT_SUBDOMAINS == "4" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│  \033[1;37mContoh subdomain xxx.vpn-premium.tech        ${tyblue}│${NC}"
-echo -e  "${tyblue}│    \033[1;37mxxx jadi subdomain kamu               ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $dn4 =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-read -rp "Masukan subdomain kamu Disini tanpa spasi : " -e dn4
-done
-rm -rf /etc/xray
-rm -rf /etc/v2ray
-rm -rf /etc/nsdomain
-rm -rf /etc/per
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
-mkdir -p /etc/nsdomain
-touch /etc/xray/domain
-touch /etc/v2ray/domain
-touch /etc/xray/slwdomain
-touch /etc/v2ray/scdomain
-echo "$dn4" > /root/domain
-echo "$dn4" > /root/scdomain
-echo "$dn4" > /etc/xray/scdomain
-echo "$dn4" > /etc/v2ray/scdomain
-echo "$dn4" > /etc/xray/domain
-echo "$dn4" > /etc/v2ray/domain
-echo "IP=$dn4" > /var/lib/ipvps.conf
-echo ""
-cd
-sleep 1
-fun_bar 'res1'
-fi
-if [[ $SELECT_SUBDOMAINS == "3" ]]; then
-clear
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
-echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
-echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $dns1 =~ ^[a-zA-Z0-9_.-]+$ ]]; do 
-read -rp "Masukan domain kamu Disini : " -e dns1
-done
-echo ""
-echo "$dns1" > /etc/xray/domain
-echo "$dns1" > /etc/v2ray/domain
-echo "IP=$dns1" > /var/lib/ipvps.conf
-clear
-echo ""
-echo -e  "${tyblue}┌──────────────────────────────────────────┐${NC}"
-echo -e  "${tyblue}│              \033[1;37mTERIMA KASIH                ${tyblue}│${NC}"
-echo -e  "${tyblue}│         \033[1;37mSUDAH MENGGUNAKAN SCRIPT         ${tyblue}│${NC}"
-echo -e  "${tyblue}│                \033[1;37mDARI SAYA                 ${tyblue}│${NC}"
-echo -e  "${tyblue}└──────────────────────────────────────────┘${NC}"
-echo " "
-until [[ $dns2 =~ ^[a-zA-Z0-9_.-]+$ ]]; do
-read -rp "Masukan Domain SlowDNS kamu Disini : " -e dns2
-done
-echo $dns2 >/etc/xray/dns
-fi
-}
+ADDON_DOMAINS
+
+
+# Membuat direktori yang diperlukan
+mkdir -p /var/lib /etc/ianlunatix /etc/ianlunatix/theme
+
+
 cat <<EOF>> /etc/ianlunatix/theme/red
 BG : \E[40;1;41m
 TEXT : \033[0;31m
