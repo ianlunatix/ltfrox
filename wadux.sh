@@ -2,6 +2,7 @@
 
 Ip_Vps=$(curl -sS ipv4.icanhazip.com)
 
+mkdir -p /etc/xray /etc/v2ray
 function domain(){
 fun_bar() {
     CMD[0]="$1"
@@ -258,7 +259,8 @@ done
 echo $dns2 >/etc/xray/dns
 fi
 }
-\E[40;1;41m
+cat <<EOF>> /etc/ianlunatix/theme/red
+BG : \E[40;1;41m
 TEXT : \033[0;31m
 EOF
 cat <<EOF>> /etc/ianlunatix/theme/green
